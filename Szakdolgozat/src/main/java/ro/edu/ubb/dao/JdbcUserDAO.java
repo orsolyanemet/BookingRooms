@@ -22,6 +22,9 @@ import ro.edu.ubb.util.SecureData;
 public class JdbcUserDAO implements UserDAO {
 
 	private ConnectionManager cm;
+	private static final String FIRSTNAME = "firstname";
+	private static final String LASTNAME = "lastname";
+	private static final String ROLETYPE = "roletype";
 
 	public JdbcUserDAO() {
 		cm = ConnectionManager.getInstance();
@@ -34,17 +37,18 @@ public class JdbcUserDAO implements UserDAO {
 		PreparedStatement preparedStatement;
 		ResultSet resultSet;
 		try {
-			preparedStatement = connection.prepareStatement("SELECT * FROM user WHERE roleType NOT LIKE \"ADMINISTRATOR\" ORDER BY username");
+			preparedStatement = connection
+					.prepareStatement("SELECT * FROM user WHERE roleType NOT LIKE \"ADMINISTRATOR\" ORDER BY username");
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				User user = new User();
 				user.setIdUser(resultSet.getInt("idUser"));
-				user.setFirstName(resultSet.getString("firstName"));
-				user.setLastName(resultSet.getString("lastName"));
+				user.setFirstName(resultSet.getString(FIRSTNAME));
+				user.setLastName(resultSet.getString(LASTNAME));
 				user.setEmail(resultSet.getString("email"));
 				user.setUsername(resultSet.getString("username"));
 				user.setPdUser(resultSet.getString("pdUser"));
-				user.setRoleType(RoleType.valueOf(resultSet.getString("roleType")));
+				user.setRoleType(RoleType.valueOf(resultSet.getString(ROLETYPE)));
 				users.add(user);
 			}
 			preparedStatement.close();
@@ -68,10 +72,10 @@ public class JdbcUserDAO implements UserDAO {
 			preparedStatement.setString(1, username);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				user.setFirstName(resultSet.getString("firstName"));
-				user.setLastName(resultSet.getString("lastName"));
+				user.setFirstName(resultSet.getString(FIRSTNAME));
+				user.setLastName(resultSet.getString(LASTNAME));
 				user.setEmail(resultSet.getString("email"));
-				user.setRoleType(RoleType.valueOf(resultSet.getString("roleType")));
+				user.setRoleType(RoleType.valueOf(resultSet.getString(ROLETYPE)));
 			}
 			preparedStatement.close();
 			resultSet.close();
@@ -94,10 +98,10 @@ public class JdbcUserDAO implements UserDAO {
 			preparedStatement.setString(1, email);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				user.setFirstName(resultSet.getString("firstName"));
-				user.setLastName(resultSet.getString("lastName"));
+				user.setFirstName(resultSet.getString(FIRSTNAME));
+				user.setLastName(resultSet.getString(LASTNAME));
 				user.setUsername(resultSet.getString("username"));
-				user.setRoleType(RoleType.valueOf(resultSet.getString("roleType")));
+				user.setRoleType(RoleType.valueOf(resultSet.getString(ROLETYPE)));
 			}
 			preparedStatement.close();
 			resultSet.close();
@@ -120,7 +124,7 @@ public class JdbcUserDAO implements UserDAO {
 			preparedStatement.setString(1, username);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				role = RoleType.valueOfIgnoreCase(resultSet.getString("roleType"));
+				role = RoleType.valueOfIgnoreCase(resultSet.getString(ROLETYPE));
 			}
 			preparedStatement.close();
 			resultSet.close();
@@ -164,8 +168,7 @@ public class JdbcUserDAO implements UserDAO {
 	@Override
 	public String createCheck(User user) {
 		createUser(user);
-		User created = new User();
-		created = findByUsername(user.getUsername());
+		User created = findByUsername(user.getUsername());
 		if (created != null) {
 			return "OK";
 		}
@@ -206,7 +209,7 @@ public class JdbcUserDAO implements UserDAO {
 			preparedStatement.setInt(1, idUser);
 			result = preparedStatement.execute();
 			preparedStatement.close();
-			result=true;
+			result = true;
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while deleting a user.");
 		} finally {
@@ -218,22 +221,23 @@ public class JdbcUserDAO implements UserDAO {
 	@Override
 	public boolean validateUser(User user) {
 		Connection connection = cm.createConnection();
-		boolean result=false;
+		boolean result = false;
 		try {
 			PreparedStatement preparedStatement = connection
 					.prepareStatement("SELECT * FROM user WHERE username = ? and pdUser = ?");
 			preparedStatement.setString(1, user.getUsername());
-			RoleType userRole=findUserRole(user.getUsername());
+			RoleType userRole = findUserRole(user.getUsername());
 			user.setRoleType(userRole);
-			RoleType role=user.getRoleType();
-			if(role==RoleType.ADMINISTRATOR) {
+			RoleType role = user.getRoleType();
+			if (role == RoleType.ADMINISTRATOR) {
 				preparedStatement.setString(2, user.getPdUser());
-			}
-			else { 
-				if(role==RoleType.ASSISTANT || role==RoleType.ASSOCIATE_PROFESSOR || role==RoleType.DOCTORAL_STUDENT || role==RoleType.LECTURER_PROFESSOR || role==RoleType.PROFESSOR){
-				preparedStatement.setString(2, SecureData.convertHexToString(SecureData.hashPassword(user.getPdUser())));
-				}
-				else {
+			} else {
+				if (role == RoleType.ASSISTANT || role == RoleType.ASSOCIATE_PROFESSOR
+						|| role == RoleType.DOCTORAL_STUDENT || role == RoleType.LECTURER_PROFESSOR
+						|| role == RoleType.PROFESSOR) {
+					preparedStatement.setString(2,
+							SecureData.convertHexToString(SecureData.hashPassword(user.getPdUser())));
+				} else {
 					preparedStatement.setString(2, " ");
 				}
 			}
