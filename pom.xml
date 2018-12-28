@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+	
+	<groupId>ro.edu.ubb</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+	
+    <organization>
+        <name>Babes-Bolyai University</name>
+        <url>www.cs.ubbcluj.ro</url>
+    </organization>
+	
+    <developers>
+        <developer>
+            <name>Nemet Orsoly</name>
+            <email>orsolyanemet@yahoo.com</email>
+            <organization>Babes-Bolyai University</organization>
+            <organizationUrl>http://cs.ubbcluj.ro</organizationUrl>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>Szakdolgozat</module>
+  </modules>
+
+    <properties>
+        <mysql.connector.versinon>5.1.24</mysql.connector.versinon>
+        <jpa.api.versinon>1.0.0.Final</jpa.api.versinon>
+        <hibernate.entitymanager.versinon>4.3.5.Final</hibernate.entitymanager.versinon>
+        <exec.maven.version>1.6.0</exec.maven.version>
+        <guice.version>3.0</guice.version>
+        <guice.persist.version>4.1.0</guice.persist.version>
+        <guava.version>18.0</guava.version>
+        <google.collections.version>1.0</google.collections.version>
+        <junit.version>4.11</junit.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connector.versinon}</version>
+            </dependency>
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>1.4</version>
+			</dependency>
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>${jpa.api.versinon}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${hibernate.entitymanager.versinon}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject.extensions</groupId>
+                <artifactId>guice-persist</artifactId>
+                <version>${guice.persist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject.extensions</groupId>
+                <artifactId>guice-servlet</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

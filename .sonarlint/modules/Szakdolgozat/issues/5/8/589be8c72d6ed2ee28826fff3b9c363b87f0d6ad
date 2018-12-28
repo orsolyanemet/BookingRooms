@@ -1,0 +1,16 @@
+
+\squid:S1989;"'Add a "try/catch" block for "dispatch".(­ÎçïüÿÿÿÿHÄRMINORZVULNERABILITY
+\squid:S19897"'Add a "try/catch" block for "dispatch".(­ÎçïüÿÿÿÿHÅRMINORZVULNERABILITY
+Wsquid:S1989A"'Add a "try/catch" block for "dispatch".(ÁÊHÆRMINORZVULNERABILITY
+ƒsquid:S2226"XRemove this misleading mutable servlet instance field or make it "static" and/or "final"(•Ô¿£ùÿÿÿÿHÇRMAJORZBUG
+wsquid:UselessImportCheck"6Remove this unused import 'javax.servlet.http.Cookie'.(«Şªü8¾ïèÄî,HÈRMINORZ
+CODE_SMELL
+|squid:UselessImportCheck";Remove this unused import 'javax.servlet.http.HttpSession'.(í¨ô8è¥èÄî,HÉRMINORZ
+CODE_SMELL
+squid:S1192!"QDefine a constant instead of duplicating this literal "msgIncorrectData" 4 times.(¬Ùù˜HÊRCRITICALZ
+CODE_SMELL
+\squid:S19897"'Add a "try/catch" block for "dispatch".(­ÎçïüÿÿÿÿHËRMINORZVULNERABILITY
+Wsquid:S1989="'Add a "try/catch" block for "dispatch".(Ú–¯ÄHÌRMINORZVULNERABILITY
+Wsquid:S1989="'Add a "try/catch" block for "dispatch".(Ú–¯ÄHÍRMINORZVULNERABILITY
+Wsquid:S1989A"'Add a "try/catch" block for "dispatch".(ÁÊHÎRMINORZVULNERABILITY
+\squid:S1989;"'Add a "try/catch" block for "dispatch".(­ÎçïüÿÿÿÿHÏRMINORZVULNERABILITY

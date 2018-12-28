@@ -1,0 +1,27 @@
+package ro.edu.ubb.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * Entity for course table.
+ * @author Nemet Orsolya, noim1553
+ *
+ */
+@Entity
+@Table(name="course")
+public class Course implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7624122568295225966L;
+
+	@Id
+	@Column(name="idCourse")
+	private Integer idCourse;
+}

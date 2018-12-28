@@ -1,0 +1,17 @@
+package ro.edu.ubb.entity;
+
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * Entity for roomtype table.
+ * @author Nemet Orsolya, noim1553
+ *
+ */
+@Entity
+@Table(name="roomtype")
+public class RoomTypes implements Serializable{
+
+}

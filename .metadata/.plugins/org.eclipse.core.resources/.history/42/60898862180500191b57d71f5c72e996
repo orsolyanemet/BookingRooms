@@ -1,0 +1,15 @@
+package ro.edu.ubb.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * Entity for course table.
+ * @author Nemet Orsolya, noim1553
+ *
+ */
+@Entity
+@Table(name="course")
+public class Course {
+
+}

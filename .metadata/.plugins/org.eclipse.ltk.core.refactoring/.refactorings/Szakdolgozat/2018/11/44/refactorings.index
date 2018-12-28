@@ -1,0 +1,20 @@
+1541318143959	Delete element
+1541318238686	Rename package 'eo.edu.ubb.backend.dao'
+1541318269465	Rename package 'ro.edu.ubb.entity'
+1541318282124	Rename package 'ro.edu.ubb.filter'
+1541318292195	Rename package 'ro.edu.ubb.service'
+1541320553781	Rename package 'ro.edu.ubb.backend.common.dao'
+1541320568090	Rename package 'ro.edu.ubb.backend.util'
+1541320587024	Rename package 'ro.edu.ubb.backend.entity'
+1541322756703	Delete element
+1541322771953	Rename type 'RoleType'
+1541324314806	Delete element
+1541324331016	Rename package 'ro.edu.ubb.backend.dao'
+1541324347408	Rename package 'ro.edu.ubb.backend.servlet'
+1541324363695	Rename package 'ro.edu.ubb.backend.service'
+1541324376590	Rename package 'ro.edu.ubb.backend.filter'
+1541327546214	Delete element
+1541327799097	Rename resource 'styles.css'
+1541327803693	Move 'login.css' to 'styles'
+1541328030709	Delete element
+1541328095679	Rename compilation unit 'PageFilterOrganizer.java'

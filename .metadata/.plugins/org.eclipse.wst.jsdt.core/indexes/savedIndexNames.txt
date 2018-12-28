@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+D:\Allamvizsga\Szakdolgozat\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1209052580.index
+583768752.index
+1206462869.index
+4216118287.index
+2209523867.index
+222141115.index
