@@ -21,18 +21,18 @@ import ro.edu.ubb.util.SecureData;
  */
 public class JdbcUserDAO implements UserDAO {
 
-	private ConnectionManager cm;
+	private ConnectionManager connectionManager;
 	private static final String FIRSTNAME = "firstname";
 	private static final String LASTNAME = "lastname";
 	private static final String ROLETYPE = "roletype";
-
+	//TODO The User entity changed a little bit, we added an other attribute, named courses
 	public JdbcUserDAO() {
-		cm = ConnectionManager.getInstance();
+		connectionManager = ConnectionManager.getInstance();
 	}
 
 	@Override
 	public List<User> getAllUsers() {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		List<User> users = new ArrayList<>();
 		PreparedStatement preparedStatement;
 		ResultSet resultSet;
@@ -56,14 +56,14 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while getting all users from database.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 		return users;
 	}
 
 	@Override
 	public User findByUsername(String username) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 		User user = new User();
@@ -82,14 +82,14 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while finding user by username.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 		return user;
 	}
 
 	@Override
 	public User findByEmail(String email) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 		User user = new User();
@@ -108,14 +108,14 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while finding user by email.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 		return user;
 	}
 
 	@Override
 	public RoleType findUserRole(String username) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet;
 		RoleType role = null;
@@ -131,14 +131,14 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while finding  user role.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 		return role;
 	}
 
 	@Override
 	public User createUser(User user) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 					"INSERT INTO user( firstName, lastName, email, username, pdUser, roleType) VALUES (?,?,?,?,?,?)",
@@ -161,7 +161,7 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while inserting the user.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class JdbcUserDAO implements UserDAO {
 
 	@Override
 	public void updateUser(User user) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(
 					"UPDATE user SET firstName=?, lastName=?, email=? where username = ?",
@@ -196,13 +196,13 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while updating user.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 	}
 
 	@Override
 	public boolean deleteUser(Integer idUser) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		boolean result;
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM user WHERE idUser = ? ");
@@ -213,14 +213,14 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while deleting a user.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 		return result;
 	}
 
 	@Override
 	public boolean validateUser(User user) {
-		Connection connection = cm.createConnection();
+		Connection connection = connectionManager.createConnection();
 		boolean result = false;
 		try {
 			PreparedStatement preparedStatement = connection
@@ -248,7 +248,7 @@ public class JdbcUserDAO implements UserDAO {
 		} catch (SQLException e) {
 			throw new DAOException("An error occured during the validation of user.");
 		} finally {
-			cm.closeConnection(connection);
+			connectionManager.closeConnection(connection);
 		}
 		return result;
 	}

@@ -18,7 +18,7 @@ public enum CourseType {
 		return courseTypeName;
 	}
 
-	public static CourseType valueofIgnoreCase(String courseTypeName) {
+	public static CourseType valueOfIgnoreCase(String courseTypeName) {
 		return valueOf(courseTypeName.toUpperCase());
 	}
 }
