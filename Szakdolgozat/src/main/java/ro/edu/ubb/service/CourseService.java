@@ -46,9 +46,9 @@ public class CourseService {
 		}
 	}
 
-	public boolean deleteCourse(Integer idCourse) {
+	public void deleteCourse(Integer idCourse) {
 		try {
-			return courseDAO.deleteCourse(idCourse);
+			courseDAO.deleteCourse(idCourse);
 		} catch (DAOException e) {
 			throw new ServiceException("Delete course failed.");
 		}

@@ -21,6 +21,7 @@ import ro.edu.ubb.util.ConnectionManager;
 public class JdbcCourseDAO implements CourseDAO {
 
 	private ConnectionManager connectionManager;
+	private static final String IDCOURSE="idCourse";
 
 	public JdbcCourseDAO() {
 		connectionManager = ConnectionManager.getInstance();
@@ -38,12 +39,12 @@ public class JdbcCourseDAO implements CourseDAO {
 			while (resultSet.next()) {
 				Course course = new Course();
 				List<CourseType> courseType = new ArrayList<>();
-				course.setIdCourse(resultSet.getInt("idCourse"));
+				course.setIdCourse(resultSet.getInt(IDCOURSE));
 				course.setCourseName(resultSet.getString("courseName"));
 				course.setNrOfAttandance(resultSet.getInt("nrOfAttandance"));
 				PreparedStatement preparedState = connection
 						.prepareStatement("SELECT idCourseType_fk FROM course_coursetype WHERE idCoursefk= ?");
-				preparedState.setInt(1, resultSet.getInt("idCourse"));
+				preparedState.setInt(1, resultSet.getInt(IDCOURSE));
 				ResultSet result = preparedState.executeQuery();
 				while (result.next()) {
 					PreparedStatement prepared = connection
@@ -82,13 +83,13 @@ public class JdbcCourseDAO implements CourseDAO {
 			preparedStatement.setString(1, courseName);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				course.setIdCourse(resultSet.getInt("idCourse"));
+				course.setIdCourse(resultSet.getInt(IDCOURSE));
 				course.setCourseName(courseName);
 				course.setNrOfAttandance(resultSet.getInt("nrOfAttandance"));
 				List<CourseType> courseType = new ArrayList<>();
 				PreparedStatement preparedState = connection
 						.prepareStatement("SELECT idCourseType_fk FROM course_coursetype WHERE idCoursefk= ?");
-				preparedState.setInt(1, resultSet.getInt("idCourse"));
+				preparedState.setInt(1, resultSet.getInt(IDCOURSE));
 				ResultSet result = preparedState.executeQuery();
 				while (result.next()) {
 					PreparedStatement prepared = connection
@@ -155,24 +156,40 @@ public class JdbcCourseDAO implements CourseDAO {
 	@Override
 	public void updateCourse(Course course) {
 		// TODO Update the courseName or nrOfAttandance from course table
-		// And update the course_coursetype table too
+		// TODO Update the course_coursetype table too
 
 	}
 
 	@Override
-	public boolean deleteCourse(Integer idCourse) {
-		// TODO Delete course BUT first we need to delete rows from other tables where the courseId appears as a foreign key
-		return false;
+	public void deleteCourse(Integer idCourse) {
+		Connection connection = connectionManager.createConnection();
+		try {
+			PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM bookroom WHERE idCoursefkey=?");
+			preparedStatement.setInt(1, idCourse);
+			preparedStatement.execute();
+			preparedStatement=connection.prepareStatement("DELETE FROM user_course WHERE idCourse_fk = ? ");
+			preparedStatement.setInt(1, idCourse);
+			preparedStatement.execute();
+			preparedStatement=connection.prepareStatement("DELETE FROM course_coursetype WHERE idCoursefk = ? ");
+			preparedStatement.setInt(1, idCourse);
+			preparedStatement.execute();
+			preparedStatement=connection.prepareStatement("DELETE FROM course WHERE idCourse = ? ");
+			preparedStatement.setInt(1, idCourse);
+			preparedStatement.execute();
+			preparedStatement.close();
+		} catch (SQLException e) {
+			throw new DAOException("An error occured while deleting a course.");
+		} finally {
+			connectionManager.closeConnection(connection);
+		}
+		
 	}
 
 	@Override
 	public boolean createCheck(Course course) {
 		createCourse(course);
 		Course created = findByCourseName(course.getCourseName());
-		if (created != null) {
-			return true;
-		}
-		return false;
+		return created!=null;
 	}
 
 }

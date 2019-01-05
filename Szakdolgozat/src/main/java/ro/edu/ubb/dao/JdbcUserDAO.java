@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ro.edu.ubb.common.dao.UserDAO;
+import ro.edu.ubb.entity.Course;
 import ro.edu.ubb.entity.RoleType;
 import ro.edu.ubb.entity.User;
 import ro.edu.ubb.util.ConnectionManager;
@@ -25,7 +26,13 @@ public class JdbcUserDAO implements UserDAO {
 	private static final String FIRSTNAME = "firstname";
 	private static final String LASTNAME = "lastname";
 	private static final String ROLETYPE = "roletype";
-	//TODO The User entity changed a little bit, we added an other attribute, named courses
+	private static final String COURSENAME = "courseName";
+	private static final String IDUSER = "idUser";
+	private static final String SELECT_COURSENAME="SELECT courseName FROM course WHERE idCourse=?";
+	private static final String SELECT_IDCOURSE_FK="SELECT idCourse_fk FROM user_course WHERE idUser_fk=? ";
+	private static final String PDUSER="pdUser";
+	private static final String IDCOURSE_FK="idCourse_fk";
+	
 	public JdbcUserDAO() {
 		connectionManager = ConnectionManager.getInstance();
 	}
@@ -42,13 +49,33 @@ public class JdbcUserDAO implements UserDAO {
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				User user = new User();
-				user.setIdUser(resultSet.getInt("idUser"));
+				List<Course> course = new ArrayList<>();
+				user.setIdUser(resultSet.getInt(IDUSER));
 				user.setFirstName(resultSet.getString(FIRSTNAME));
 				user.setLastName(resultSet.getString(LASTNAME));
 				user.setEmail(resultSet.getString("email"));
 				user.setUsername(resultSet.getString("username"));
-				user.setPdUser(resultSet.getString("pdUser"));
+				user.setPdUser(resultSet.getString(PDUSER));
 				user.setRoleType(RoleType.valueOf(resultSet.getString(ROLETYPE)));
+				PreparedStatement preparedState = connection
+						.prepareStatement(SELECT_IDCOURSE_FK);
+				preparedState.setInt(1, resultSet.getInt(IDUSER));
+				ResultSet result = preparedState.executeQuery();
+				while (result.next()) {
+					PreparedStatement prepared = connection
+							.prepareStatement(SELECT_COURSENAME);
+					prepared.setInt(1, result.getInt(IDCOURSE_FK));
+					ResultSet result2 = prepared.executeQuery();
+					while (result2.next()) {
+						JdbcCourseDAO courseDAO = new JdbcCourseDAO();
+						course.add(courseDAO.findByCourseName(result2.getString(COURSENAME)));
+						user.setCourses(course);
+					}
+					prepared.close();
+					result2.close();
+				}
+				preparedState.close();
+				result.close();
 				users.add(user);
 			}
 			preparedStatement.close();
@@ -72,10 +99,33 @@ public class JdbcUserDAO implements UserDAO {
 			preparedStatement.setString(1, username);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
+				user.setIdUser(resultSet.getInt(IDUSER));
 				user.setFirstName(resultSet.getString(FIRSTNAME));
 				user.setLastName(resultSet.getString(LASTNAME));
 				user.setEmail(resultSet.getString("email"));
+				user.setUsername(username);
+				user.setPdUser(resultSet.getString(PDUSER));
 				user.setRoleType(RoleType.valueOf(resultSet.getString(ROLETYPE)));
+				List<Course> course = new ArrayList<>();
+				PreparedStatement preparedState = connection
+						.prepareStatement(SELECT_IDCOURSE_FK);
+				preparedState.setInt(1, resultSet.getInt(IDUSER));
+				ResultSet result = preparedState.executeQuery();
+				while (result.next()) {
+					PreparedStatement prepared = connection
+							.prepareStatement(SELECT_COURSENAME);
+					prepared.setInt(1, result.getInt(IDCOURSE_FK));
+					ResultSet result2 = prepared.executeQuery();
+					while (result2.next()) {
+						JdbcCourseDAO courseDAO = new JdbcCourseDAO();
+						course.add(courseDAO.findByCourseName(result2.getString(COURSENAME)));
+						user.setCourses(course);
+					}
+					prepared.close();
+					result2.close();
+				}
+				preparedState.close();
+				result.close();
 			}
 			preparedStatement.close();
 			resultSet.close();
@@ -98,10 +148,33 @@ public class JdbcUserDAO implements UserDAO {
 			preparedStatement.setString(1, email);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
+				user.setIdUser(resultSet.getInt(IDUSER));
 				user.setFirstName(resultSet.getString(FIRSTNAME));
 				user.setLastName(resultSet.getString(LASTNAME));
+				user.setEmail(email);
 				user.setUsername(resultSet.getString("username"));
+				user.setPdUser(resultSet.getString(PDUSER));
 				user.setRoleType(RoleType.valueOf(resultSet.getString(ROLETYPE)));
+				List<Course> course = new ArrayList<>();
+				PreparedStatement preparedState = connection
+						.prepareStatement(SELECT_IDCOURSE_FK);
+				preparedState.setInt(1, resultSet.getInt(IDUSER));
+				ResultSet result = preparedState.executeQuery();
+				while (result.next()) {
+					PreparedStatement prepared = connection
+							.prepareStatement(SELECT_COURSENAME);
+					prepared.setInt(1, result.getInt(IDCOURSE_FK));
+					ResultSet result2 = prepared.executeQuery();
+					while (result2.next()) {
+						JdbcCourseDAO courseDAO = new JdbcCourseDAO();
+						course.add(courseDAO.findByCourseName(result2.getString(COURSENAME)));
+						user.setCourses(course);
+					}
+					prepared.close();
+					result2.close();
+				}
+				preparedState.close();
+				result.close();
 			}
 			preparedStatement.close();
 			resultSet.close();
@@ -156,38 +229,47 @@ public class JdbcUserDAO implements UserDAO {
 			user.setIdUser(resultSet.getInt(1));
 			preparedStatement.close();
 			resultSet.close();
-			return user;
-
+			for (Integer i = 0; i < user.getCourses().size(); i++) {
+				preparedStatement = connection.prepareStatement("SELECT idCourse FROM course WHERE courseName=?");
+				preparedStatement.setString(1, user.getCourses().get(i).getCourseName());
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next()) {
+					PreparedStatement prep = connection
+							.prepareStatement("INSERT INTO user_course(idUser_fk,idCourse_fk) VALUES(?,?) ");
+					prep.setInt(1, user.getIdUser());
+					prep.setInt(2, resultSet.getInt("idCourse"));
+					prep.execute();
+					prep.close();
+				}
+				resultSet.close();
+				preparedStatement.close();
+			}
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while inserting the user.");
 		} finally {
 			connectionManager.closeConnection(connection);
 		}
+		return user;
 	}
 
 	@Override
-	public String createCheck(User user) {
+	public boolean createCheck(User user) {
 		createUser(user);
 		User created = findByUsername(user.getUsername());
-		if (created != null) {
-			return "OK";
-		}
-		return "NULL";
-
+		return created != null;
 	}
 
 	@Override
 	public void updateUser(User user) {
+		//TODO Update the user_course table
 		Connection connection = connectionManager.createConnection();
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(
-					"UPDATE user SET firstName=?, lastName=?, email=? where username = ?",
+					"UPDATE user SET lastName=?, email=? where username = ?",
 					PreparedStatement.RETURN_GENERATED_KEYS);
-
-			preparedStatement.setString(1, user.getFirstName());
-			preparedStatement.setString(2, user.getLastName());
-			preparedStatement.setString(3, user.getEmail());
-			preparedStatement.setString(4, user.getUsername());
+			preparedStatement.setString(1, user.getLastName());
+			preparedStatement.setString(2, user.getEmail());
+			preparedStatement.setString(3, user.getUsername());
 			preparedStatement.execute();
 			ResultSet resultSet = preparedStatement.getGeneratedKeys();
 			resultSet.next();
@@ -201,21 +283,24 @@ public class JdbcUserDAO implements UserDAO {
 	}
 
 	@Override
-	public boolean deleteUser(Integer idUser) {
+	public void deleteUser(Integer idUser) {
 		Connection connection = connectionManager.createConnection();
-		boolean result;
 		try {
-			PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM user WHERE idUser = ? ");
+			PreparedStatement preparedStatement =  connection.prepareStatement("DELETE FROM bookroom WHERE idUserfkey=?");
 			preparedStatement.setInt(1, idUser);
-			result = preparedStatement.execute();
+			preparedStatement.execute();
+			preparedStatement=connection.prepareStatement("DELETE FROM user_course WHERE idUser_fk = ? ");
+			preparedStatement.setInt(1, idUser);
+			preparedStatement.execute();
+			preparedStatement=connection.prepareStatement("DELETE FROM user WHERE idUser = ? ");
+			preparedStatement.setInt(1, idUser);
+			preparedStatement.execute();
 			preparedStatement.close();
-			result = true;
 		} catch (SQLException e) {
 			throw new DAOException("An error occured while deleting a user.");
 		} finally {
 			connectionManager.closeConnection(connection);
 		}
-		return result;
 	}
 
 	@Override

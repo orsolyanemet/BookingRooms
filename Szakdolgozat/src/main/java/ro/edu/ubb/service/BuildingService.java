@@ -9,11 +9,12 @@ import ro.edu.ubb.entity.Building;
 
 /**
  * Service for building.
+ * 
  * @author Nemet Orsolya, noim1553
  *
  */
 public class BuildingService {
-	
+
 	private BuildingDAO buildingDAO;
 	private DAOFactory daoFactory;
 
@@ -21,7 +22,7 @@ public class BuildingService {
 		daoFactory = DAOFactory.getInstance();
 		buildingDAO = daoFactory.getBuildingDAO();
 	}
-	
+
 	public Building createBuilding(Building building) {
 		try {
 			return buildingDAO.createBuilding(building);
@@ -29,7 +30,7 @@ public class BuildingService {
 			throw new ServiceException("Insert building failed.");
 		}
 	}
-	
+
 	public boolean createCheck(Building building) {
 		try {
 			return buildingDAO.createCheck(building);
@@ -37,23 +38,15 @@ public class BuildingService {
 			throw new ServiceException("Create check building failed.");
 		}
 	}
-	
-	public void updateBuilding(Building building) {
-		try {
-			buildingDAO.updateBuilding(building);
-		} catch (DAOException e) {
-			throw new ServiceException("Update building failed.");
-		}
-	}
 
-	public boolean deleteBuilding(Integer idBuilding) {
+	public void deleteBuilding(Integer idBuilding) {
 		try {
-			return buildingDAO.deleteBuilding(idBuilding);
+			buildingDAO.deleteBuilding(idBuilding);
 		} catch (DAOException e) {
 			throw new ServiceException("Delete building failed.");
 		}
 	}
-	
+
 	public Building findByBuildingName(String buildingName) {
 		try {
 			return buildingDAO.findByBuildingName(buildingName);
@@ -61,7 +54,7 @@ public class BuildingService {
 			throw new ServiceException("Finding building by name failed.");
 		}
 	}
-	
+
 	public List<Building> getAllBuildings() {
 		try {
 			return buildingDAO.getAllBuildings();

@@ -17,8 +17,8 @@ public interface UserDAO {
 	User findByEmail(String email);
 	RoleType findUserRole(String username);
 	User createUser(User user);
-	String createCheck(User user);
+	boolean createCheck(User user);
 	void updateUser(User user);
-    boolean deleteUser(Integer idUser);
+    void deleteUser(Integer idUser);
     boolean validateUser(User user);
 }

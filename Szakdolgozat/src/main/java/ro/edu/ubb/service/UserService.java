@@ -31,7 +31,7 @@ public class UserService {
 		}
 	}
 	
-	public String createCheck(User user) {
+	public boolean createCheck(User user) {
 		try {
 			return userDAO.createCheck(user);
 		} catch (DAOException e) {
@@ -47,9 +47,9 @@ public class UserService {
 		}
 	}
 
-	public boolean deleteUser(Integer idUser) {
+	public void deleteUser(Integer idUser) {
 		try {
-			return userDAO.deleteUser(idUser);
+			userDAO.deleteUser(idUser);
 		} catch (DAOException e) {
 			throw new ServiceException("Delete user failed.");
 		}

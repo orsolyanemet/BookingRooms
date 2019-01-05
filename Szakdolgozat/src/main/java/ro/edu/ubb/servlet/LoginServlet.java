@@ -24,11 +24,12 @@ public class LoginServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = -663150891209934794L;
-	private UserService userService = new UserService();
+	private static UserService userService = new UserService();
+	private static final String MSGINCORRECTDATA="msgIncorrectData";
 	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		req.getSession().setAttribute("msgIncorrectData", "");
+		req.getSession().setAttribute(MSGINCORRECTDATA, "");
 		req.getSession().setAttribute("msgPwdNotGiven", "");
 		req.getSession().setAttribute("msgUsernameNotGiven", "");
 		req.getSession().setAttribute("loggedUsername", "");
@@ -43,9 +44,9 @@ public class LoginServlet extends HttpServlet {
 		User user = new User();
 		user.setUsername(username);
 		user.setPdUser(pdUser);
-		req.getSession().setAttribute("msgIncorrectData", "");
+		req.getSession().setAttribute(MSGINCORRECTDATA, "");
 		if (userService.validateUser(user)) {
-			req.getSession().setAttribute("msgIncorrectData", "");
+			req.getSession().setAttribute(MSGINCORRECTDATA, "");
 			req.getSession().setAttribute("loggedUsername", user.getUsername());
 			RoleType roleType=userService.findByUsername(user.getUsername()).getRoleType();
 			if(roleType==RoleType.ADMINISTRATOR) {
@@ -59,7 +60,7 @@ public class LoginServlet extends HttpServlet {
 				dispatch("error.jsp", req, res);
 			}
 		} else {
-			req.getSession().setAttribute("msgIncorrectData", "Incorrect username or password!");
+			req.getSession().setAttribute(MSGINCORRECTDATA, "Incorrect username or password!");
 			dispatch("login.jsp", req, res);
 		}
 	}

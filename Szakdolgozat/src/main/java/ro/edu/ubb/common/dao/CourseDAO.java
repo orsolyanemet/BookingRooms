@@ -19,7 +19,7 @@ public interface CourseDAO {
 
 	void updateCourse(Course course);
 
-	boolean deleteCourse(Integer idCourse);
+	void deleteCourse(Integer idCourse);
 
 	boolean createCheck(Course course);
 }

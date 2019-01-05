@@ -17,9 +17,7 @@ public interface BuildingDAO {
 
 	Building createBuilding(Building building);
 
-	void updateBuilding(Building building);
-
-	boolean deleteBuilding(Integer idBuilding);
+	void deleteBuilding(Integer idBuilding);
 
 	boolean createCheck(Building building);
 }
